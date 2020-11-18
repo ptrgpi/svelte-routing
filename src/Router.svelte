@@ -13,7 +13,7 @@
 
   const routes = writable([]);
   const activeRoute = writable(null);
-  let hasActiveRoute = false; // Used in SSR to synchronously set that a Route is active.
+  let hasActiveRoute = false; // Used i SSR to synchronously set that a Route is active.
 
   // If locationContext is not set, this is the topmost Router in the tree.
   // If the `url` prop is given we force the location to it.
@@ -65,7 +65,7 @@
         return;
       }
 
-      const matchingRoute = match(route, $location.pathname);
+      const matchingRoute = match(route, combinePaths($location.pathname, $location.hash));
       if (matchingRoute) {
         activeRoute.set(matchingRoute);
         hasActiveRoute = true;
@@ -100,7 +100,7 @@
   // will not find an active Route in SSR and in the browser it will only
   // pick an active Route after all Routes have been registered.
   $: {
-    const bestMatch = pick($routes, $location.pathname);
+    const bestMatch = pick($routes, combinePaths($location.pathname, $location.hash));
     activeRoute.set(bestMatch);
   }
 
